@@ -40,6 +40,19 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
     let type: string = shape.split("~", 1)[0];
     switch (type) {
         case "TRACK":
+            let [command, strokeWidth, layerID, net, raw_points_str, id, ..._] = shape.split("~");
+            let raw_points = raw_points_str.split(" ");
+            let points = [];
+            for (let i=0; i<raw_points.length; i += 2) {
+                let x = parseInt(raw_points[i]);
+                let y = parseInt(raw_points[i+1]);
+                points.push([x, y]);
+            }
+            ctx.beginPath();
+            for (let point of points) {
+                ctx.lineTo(point[0], point[1]);
+            }
+            ctx.stroke();
             break;
         case "LIB":
             break;
