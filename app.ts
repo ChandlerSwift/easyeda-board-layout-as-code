@@ -38,31 +38,30 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
     // "TRACK~1~10~~4415.5 3607.3501 4415.5 3213.6497~gge2073~0",
     // "TRACK~1~10~~4415.5 3213.6497 4988.5 3213.6497 4988.5 3607.3501~gge24273~0",
     let type: string = shape.split("~", 1)[0];
-    switch (type) {
-        case "TRACK":
-            let [command, strokeWidth, layerID, net, raw_points_str, id, ..._] = shape.split("~");
-            let raw_points = raw_points_str.split(" ");
-            let points = [];
-            for (let i=0; i<raw_points.length; i += 2) {
-                let x = parseInt(raw_points[i]);
-                let y = parseInt(raw_points[i+1]);
-                points.push([x, y]);
-            }
-            ctx.beginPath();
-            for (let point of points) {
-                ctx.lineTo(point[0], point[1]);
-            }
-            ctx.stroke();
-            break;
-        case "LIB":
-            break;
-        case "HOLE":
-            break;
-        default:
-            alert(`Unknown type ${type}`);
+    if (type === "TRACK") {
+        let [command, strokeWidth, layerID, net, raw_points_str, id, ..._] = shape.split("~");
+        let raw_points = raw_points_str.split(" ");
+        let points = [];
+        for (let i=0; i<raw_points.length; i += 2) {
+            let x = parseFloat(raw_points[i]);
+            let y = parseFloat(raw_points[i+1]);
+            points.push([x, y]);
+        }
+        ctx.beginPath();
+        for (let point of points) {
+            ctx.lineTo(point[0], point[1]);
+        }
+        ctx.stroke();
+    } else if (type === "LIB") {
+        console.log("Unimplemented: LIB");
+    } else if (type === "HOLE") {
+        let [command, center_x, center_y, diameter, id, ..._] = shape.split("~");
+        ctx.beginPath();
+        ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(diameter)/2, 0, 2*Math.PI);
+        ctx.stroke();
+    } else {
+        alert(`Unknown type ${type}`);
     }
-
-
 }
 
 function updateCanvas(source: string, canvas: HTMLCanvasElement) {
