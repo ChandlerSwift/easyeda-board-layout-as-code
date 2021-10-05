@@ -163,11 +163,15 @@ canvas.addEventListener("mousemove", function(evt) {
 // add button event listeners
 document.getElementById("zoomIn").addEventListener("click", function() {
     scale /= scaleMultiplier;
+    translatePos.x /= scaleMultiplier;
+    translatePos.y /= scaleMultiplier;
     updateCanvas(input.innerText, canvas);
 }, false);
 
 document.getElementById("zoomOut").addEventListener("click", function() {
     scale *= scaleMultiplier;
+    translatePos.x *= scaleMultiplier;
+    translatePos.y *= scaleMultiplier;
     updateCanvas(input.innerText, canvas);
 }, false);
 
