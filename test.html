@@ -37,6 +37,14 @@
         canvas {
             width: 50vw;
         }
+        .btnContainer {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+        }
+        button {
+          padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -251,6 +259,10 @@
         "netColors": {}
       }
     </code></pre>
+    <div class="btnContainer">
+      <button id="zoomIn">+</button>
+      <button id="zoomOut">-</button>
+    </div>
     <canvas></canvas>
     <script>hljs.highlightAll();</script>
     <script src="app.js"></script>

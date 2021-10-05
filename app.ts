@@ -108,6 +108,9 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
     canvas.height = canvas.clientHeight;
     const ctx = canvas.getContext('2d');
 
+    ctx.translate(translatePos.x, translatePos.y);
+    ctx.scale(scale, scale);
+
     let data: EasyEDADesign;
     try {
         data = JSON.parse(source);
@@ -122,10 +125,53 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
     console.log("Unhandled types:", unknown_seen_types);
 }
 
+let translatePos = {
+    x: canvas.width / 2,
+    y: canvas.height / 2
+};
+
+let scale = 0.1;
+let scaleMultiplier = 0.8;
+let startDragOffset = {x: 0, y: 0};
+let mouseDown = false;
+
+// add event listeners to handle screen drag
+canvas.addEventListener("mousedown", function(evt) {
+    mouseDown = true;
+    startDragOffset.x = evt.clientX - translatePos.x;
+    startDragOffset.y = evt.clientY - translatePos.y;
+});
+
+canvas.addEventListener("mouseup", e => mouseDown = false);
+canvas.addEventListener("mouseover", e => mouseDown = false);
+canvas.addEventListener("mouseout", e => mouseDown = false);
+
 let input = document.querySelector("code");
-updateCanvas(input.innerText, canvas);
+
+canvas.addEventListener("mousemove", function(evt) {
+    if (mouseDown) {
+        console.log("rendering");
+        translatePos.x = evt.clientX - startDragOffset.x;
+        translatePos.y = evt.clientY - startDragOffset.y;
+        console.log(translatePos);
+        updateCanvas(input.innerText, canvas);
+    }
+});
+
+// add button event listeners
+document.getElementById("zoomIn").addEventListener("click", function() {
+    scale /= scaleMultiplier;
+    updateCanvas(input.innerText, canvas);
+}, false);
+
+document.getElementById("zoomOut").addEventListener("click", function() {
+    scale *= scaleMultiplier;
+    updateCanvas(input.innerText, canvas);
+}, false);
 
 input.addEventListener("input", e => updateCanvas((<HTMLElement>e.target).innerText, canvas));
 
 // Don't distort on document resize
 window.addEventListener("resize", e => updateCanvas(input.innerText, canvas));
+
+updateCanvas(input.innerText, canvas);
