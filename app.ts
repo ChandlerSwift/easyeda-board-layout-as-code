@@ -31,7 +31,7 @@ class EasyEDADesign {
     routerRule: Object;
     netColors: Object;
 }
-
+let unknown_seen_types = [];
 function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
     // "TRACK~1.4~7~~4577.228 3204 4734.975 3204 4758.644 3227.669~gge23155~0",
     // "TRACK~1~10~~4702.0001 3320.85 4702.0001 3893.85~gge24275~0",
@@ -53,14 +53,22 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         }
         ctx.stroke();
     } else if (type === "LIB") {
-        console.log("Unimplemented: LIB");
+        let subShapes = shape.split("#@$");
+        for (let subShape of subShapes) {
+            if (subShape.split("~", 1)[0] === "LIB") {
+                continue;
+            }
+            renderShape(ctx, subShape);
+        }
     } else if (type === "HOLE") {
         let [command, center_x, center_y, diameter, id, ..._] = shape.split("~");
         ctx.beginPath();
         ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(diameter)/2, 0, 2*Math.PI);
         ctx.stroke();
-    } else {
-        alert(`Unknown type ${type}`);
+    } else { // We don't know how to handle this
+        console.log(`Unknown type ${type}`);
+        if (!unknown_seen_types.includes(type))
+            unknown_seen_types.push(type);
     }
 }
 
@@ -77,11 +85,11 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
         ctx.fillText(`Error parsing data: ${e}`, 10, 20);
         return;
     }
-    console.log(`Found ${data.shape.length} shapes`);
 
     for (let shape of data.shape) {
         renderShape(ctx, shape);
     }
+    console.log(unknown_seen_types);
 }
 
 let input = document.querySelector("code");
