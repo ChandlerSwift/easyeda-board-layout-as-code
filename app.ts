@@ -70,7 +70,11 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
     } else if (type === "ARC") {
         console.log("ARC not implemented");
     } else if (type === "CIRCLE") {
-        console.log("CIRCLE not implemented");
+        let [command, center_x, center_y, radius, id, ..._] = shape.split("~");
+        ctx.beginPath();
+        // TODO: ctx.lineWidth = ???
+        ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(radius), 0, 2*Math.PI);
+        ctx.stroke();
     } else if (type === "SOLIDREGION") {
         console.log("SOLIDREGION not implemented");
     } else if (type === "SVGNODE") {
