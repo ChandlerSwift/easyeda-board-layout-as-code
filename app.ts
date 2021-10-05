@@ -79,14 +79,32 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         let [command, layerID, net, raw_points_str, id, ..._] = shape.split("~");
         let raw_points = raw_points_str.split(" ");
         let points = [];
-        for (let i=0; i<raw_points.length; i += 2) {
-            let x = parseFloat(raw_points[i]);
-            let y = parseFloat(raw_points[i+1]);
-            points.push([x, y]);
+        for (let i=0; i<raw_points.length; i += 3) {
+            let command = raw_points[i];
+            if (command === "A") {
+                // Hacks! We could probably implement a proper parser here. Skip
+                // the next 3; they don't matter if we don't implement arc below
+                i += 5;
+            }
+            let x = parseFloat(raw_points[i+1]);
+            let y = parseFloat(raw_points[i+2]);
+
+            points.push({command: command, x: x, y: y});
         }
         ctx.beginPath();
         for (let point of points) {
-            ctx.lineTo(point[0], point[1]);
+            if (point.command === "M") { // MOVETO (https://www.w3.org/TR/SVG11/paths.html#PathDataGeneralInformation)
+                ctx.moveTo(point.x, point.y);
+            } else if (point.command === "L") { // LINETO
+                ctx.lineTo(point.x, point.y);
+            } else if (point.command === "Z") { // CLOSEPATH
+                ctx.fill();
+            } else if (point.command === "A") { // ARC
+                console.log("Arc not implemented; substituting LineTo");
+                ctx.lineTo(point.x, point.y);
+            } else {
+                throw `Unknown command ${point.command}`;
+            }
         }
         ctx.fill();
     } else if (type === "SVGNODE") {
