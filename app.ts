@@ -76,7 +76,19 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(radius), 0, 2*Math.PI);
         ctx.stroke();
     } else if (type === "SOLIDREGION") {
-        console.log("SOLIDREGION not implemented");
+        let [command, layerID, net, raw_points_str, id, ..._] = shape.split("~");
+        let raw_points = raw_points_str.split(" ");
+        let points = [];
+        for (let i=0; i<raw_points.length; i += 2) {
+            let x = parseFloat(raw_points[i]);
+            let y = parseFloat(raw_points[i+1]);
+            points.push([x, y]);
+        }
+        ctx.beginPath();
+        for (let point of points) {
+            ctx.lineTo(point[0], point[1]);
+        }
+        ctx.fill();
     } else if (type === "SVGNODE") {
         console.log("SVGNODE not implemented");
     } else if (type === "PAD") {
