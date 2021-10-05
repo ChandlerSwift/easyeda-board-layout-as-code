@@ -65,6 +65,20 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         ctx.beginPath();
         ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(diameter)/2, 0, 2*Math.PI);
         ctx.stroke();
+    } else if (type === "TEXT") {
+        console.log("TEXT not implemented");
+    } else if (type === "ARC") {
+        console.log("ARC not implemented");
+    } else if (type === "CIRCLE") {
+        console.log("CIRCLE not implemented");
+    } else if (type === "SOLIDREGION") {
+        console.log("SOLIDREGION not implemented");
+    } else if (type === "SVGNODE") {
+        console.log("SVGNODE not implemented");
+    } else if (type === "PAD") {
+        console.log("PAD not implemented");
+    } else if (type === "DIMENSION") {
+        console.log("DIMENSION not implemented");
     } else { // We don't know how to handle this
         console.log(`Unknown type ${type}`);
         if (!unknown_seen_types.includes(type))
@@ -89,7 +103,7 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
     for (let shape of data.shape) {
         renderShape(ctx, shape);
     }
-    console.log(unknown_seen_types);
+    console.log("Unhandled types:", unknown_seen_types);
 }
 
 let input = document.querySelector("code");
