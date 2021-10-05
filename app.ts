@@ -125,12 +125,14 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
     console.log("Unhandled types:", unknown_seen_types);
 }
 
+let initialData: EasyEDADesign = JSON.parse(document.querySelector("code").innerHTML);
+
 let translatePos = {
-    x: canvas.width / 2,
-    y: canvas.height / 2
+    x: -parseFloat(initialData.head.x),
+    y: -parseFloat(initialData.head.y) + canvas.clientHeight / 2
 };
 
-let scale = 0.1;
+let scale = 1.0;
 let scaleMultiplier = 0.8;
 let startDragOffset = {x: 0, y: 0};
 let mouseDown = false;
