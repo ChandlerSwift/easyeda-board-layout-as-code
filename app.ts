@@ -65,6 +65,16 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         ctx.beginPath();
         ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(diameter)/2, 0, 2*Math.PI);
         ctx.stroke();
+    } else if (type === "VIA") {
+        let [command, center_x, center_y, diameter, net, hole_radius, id, ..._] = shape.split("~");
+        ctx.beginPath();
+        ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(diameter)/2, 0, 2*Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = "rgb(255,255,255)";
+        ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(hole_radius), 0, 2*Math.PI);
+        ctx.strokeStyle = "rgb(0,0,0)";
+        ctx.stroke();
     } else if (type === "TEXT") {
         console.log("TEXT not implemented");
     } else if (type === "ARC") {
