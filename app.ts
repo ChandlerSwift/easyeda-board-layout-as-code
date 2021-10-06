@@ -217,7 +217,7 @@ let translatePos = {
 };
 
 let scale = 1.0;
-let scaleMultiplier = 0.8;
+let scaleMultiplier = 1.25;
 let startDragOffset = {x: 0, y: 0};
 let mouseDown = false;
 
@@ -236,26 +236,26 @@ let input = document.querySelector("code");
 
 canvas.addEventListener("mousemove", function(evt) {
     if (mouseDown) {
-        console.log("rendering");
+        debug("rendering");
         translatePos.x = evt.clientX - startDragOffset.x;
         translatePos.y = evt.clientY - startDragOffset.y;
-        console.log(translatePos);
+        debug(translatePos);
         updateCanvas(input.innerText, canvas);
     }
 });
 
 // add button event listeners
 document.getElementById("zoomIn").addEventListener("click", function() {
-    scale /= scaleMultiplier;
-    translatePos.x /= scaleMultiplier;
-    translatePos.y /= scaleMultiplier;
+    translatePos.x = (translatePos.x - canvas.clientWidth / 2 * scale) * scaleMultiplier + canvas.clientWidth / 2 * scale;
+    translatePos.y = (translatePos.y - canvas.clientHeight / 2 * scale) * scaleMultiplier + canvas.clientHeight / 2 * scale;
+    scale *= scaleMultiplier;
     updateCanvas(input.innerText, canvas);
 }, false);
 
 document.getElementById("zoomOut").addEventListener("click", function() {
-    scale *= scaleMultiplier;
-    translatePos.x *= scaleMultiplier;
-    translatePos.y *= scaleMultiplier;
+    translatePos.x = (translatePos.x - canvas.clientWidth / 2 * scale) / scaleMultiplier + canvas.clientWidth / 2 * scale;
+    translatePos.y = (translatePos.y - canvas.clientHeight / 2 * scale) / scaleMultiplier + canvas.clientHeight / 2 * scale;
+    scale /= scaleMultiplier;
     updateCanvas(input.innerText, canvas);
 }, false);
 
