@@ -125,7 +125,7 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         console.log("DIMENSION not implemented");
     } else { // We don't know how to handle this
         console.log(`Unknown type ${type}`);
-        if (!unknown_seen_types.includes(type))
+        if (unknown_seen_types.indexOf(type) > -1)
             unknown_seen_types.push(type);
     }
 }
