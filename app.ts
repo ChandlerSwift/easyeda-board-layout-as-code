@@ -1,5 +1,12 @@
 let canvas = document.querySelector("canvas");
 
+let DEBUG = false;
+function debug(...args) {
+    if (DEBUG) {
+        console.log(...args);
+    }
+}
+
 class EasyEDADesignHead {
     docType: string;
     editorVersion: string;
@@ -76,9 +83,9 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         ctx.strokeStyle = "rgb(0,0,0)";
         ctx.stroke();
     } else if (type === "TEXT") {
-        console.log("TEXT not implemented");
+        debug("TEXT not implemented");
     } else if (type === "ARC") {
-        console.log("ARC not implemented");
+        debug("ARC not implemented");
     } else if (type === "CIRCLE") {
         let [command, center_x, center_y, radius, id, ..._] = shape.split("~");
         ctx.beginPath();
@@ -110,7 +117,7 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
             } else if (point.command === "Z") { // CLOSEPATH
                 ctx.fill();
             } else if (point.command === "A") { // ARC
-                console.log("Arc not implemented; substituting LineTo");
+                debug("Arc not implemented; substituting LineTo");
                 ctx.lineTo(point.x, point.y);
             } else {
                 throw `Unknown command ${point.command}`;
@@ -118,13 +125,13 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         }
         ctx.fill();
     } else if (type === "SVGNODE") {
-        console.log("SVGNODE not implemented");
+        debug("SVGNODE not implemented");
     } else if (type === "PAD") {
-        console.log("PAD not implemented");
+        debug("PAD not implemented");
     } else if (type === "DIMENSION") {
-        console.log("DIMENSION not implemented");
+        debug("DIMENSION not implemented");
     } else { // We don't know how to handle this
-        console.log(`Unknown type ${type}`);
+        debug(`Unknown type ${type}`);
         if (unknown_seen_types.indexOf(type) > -1)
             unknown_seen_types.push(type);
     }
@@ -150,7 +157,7 @@ function updateCanvas(source: string, canvas: HTMLCanvasElement) {
     for (let shape of data.shape) {
         renderShape(ctx, shape);
     }
-    console.log("Unhandled types:", unknown_seen_types);
+    debug("Unhandled types:", unknown_seen_types);
 }
 
 let initialData: EasyEDADesign = JSON.parse(document.querySelector("code").innerHTML);
