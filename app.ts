@@ -55,10 +55,21 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
             points.push([x, y]);
         }
         ctx.beginPath();
+        if (layerID === "1") { // TopLayer
+            ctx.strokeStyle = "rgb(255,0,255)";
+        }
+        else if (layerID === "2") { // BottomLayer
+            ctx.strokeStyle = "rgb(0,255,0)";
+        }
+        else if (layerID === "10") { // BoardOutline
+            ctx.lineWidth = 4;
+        }
         for (let point of points) {
             ctx.lineTo(point[0], point[1]);
         }
         ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgb(0,0,0)";
     } else if (type === "LIB") {
         let subShapes = shape.split("#@$");
         for (let subShape of subShapes) {
@@ -112,6 +123,7 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
         for (let point of points) {
             if (point.command === "M") { // MOVETO (https://www.w3.org/TR/SVG11/paths.html#PathDataGeneralInformation)
                 ctx.moveTo(point.x, point.y);
+                ctx.fillStyle = "rgba(0,0,0,0.3)";
             } else if (point.command === "L") { // LINETO
                 ctx.lineTo(point.x, point.y);
             } else if (point.command === "Z") { // CLOSEPATH
@@ -124,6 +136,7 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
             }
         }
         ctx.fill();
+        ctx.fillStyle = "rgb(0,0,0)";
     } else if (type === "SVGNODE") {
         debug("SVGNODE not implemented");
     } else if (type === "PAD") {
