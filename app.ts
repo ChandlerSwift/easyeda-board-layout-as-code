@@ -127,7 +127,43 @@ function renderShape(ctx: CanvasRenderingContext2D, shape: string) {
     } else if (type === "SVGNODE") {
         debug("SVGNODE not implemented");
     } else if (type === "PAD") {
-        debug("PAD not implemented");
+        let [command, pad_type, center_x, center_y, width, height, layerID, net, number, hole_radius, raw_points_str, rotation, id, hole_length, hole_points, plated, ..._] = shape.split("~");
+        if (hole_length != "0" || hole_points != "") {
+            debug("Holes in pads not yet supported");
+        }
+        if (pad_type === "ELLIPSE") {
+            if (width != height) {
+                debug("Non-circle ellipses not yet implemented (width " + width + ", height " + height + ")");
+                return;
+            }
+            ctx.beginPath();
+            ctx.arc(parseFloat(center_x), parseFloat(center_y), parseFloat(width) / 2, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+        else if (pad_type === "RECT") {
+            var raw_points = raw_points_str.split(" ");
+            var points = [];
+            for (var i = 0; i < raw_points.length; i += 2) {
+                var x = parseFloat(raw_points[i]);
+                var y = parseFloat(raw_points[i + 1]);
+                points.push([x, y]);
+            }
+            ctx.beginPath();
+            for (let point of points) {
+                ctx.lineTo(point[0], point[1]);
+            }
+            ctx.fill();
+        }
+        else if (pad_type === "OVAL") {
+            debug([command, pad_type, center_x, center_y, width, height, layerID, net, number, hole_radius, raw_points_str, rotation, id, hole_length, hole_points, plated]);
+            debug(`${pad_type} PAD not implemented`);
+        }
+        else if (pad_type === "POLYGON") {
+            debug(`${pad_type} PAD not implemented`);
+        }
+        else {
+            debug(`${pad_type} PAD not recognized`);
+        }
     } else if (type === "DIMENSION") {
         debug("DIMENSION not implemented");
     } else { // We don't know how to handle this
